@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="MMHU:
+A Massive-Scale Multimodal Benchmark for Human Behavior Understanding ">
+  <meta name="keywords" content="Our keywords for search">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MMHU</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics  -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="static/css/bulma.min.css">
+  <link rel="stylesheet" href="static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="static/css/index_motiondiffuse.css">
+  <!-- <link rel="icon" href="./static/images/favicon.svg"> -->
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="static/js/fontawesome.all.min.js"></script>
+  <script src="static/js/bulma-carousel.min.js"></script>
+  <script src="static/js/bulma-slider.min.js"></script>
+  <script src="static/js/index.js"></script>
+
+
+  
+  <style>
+    .tabs {
+      display: flex;
+      cursor: pointer;
+      margin-bottom: 1em;
+    }
+
+    .tab {
+      padding: 10px 20px;
+      border: 1px solid #ccc;
+      border-bottom: none;
+      background: #f0f0f0;
+    }
+
+    .tab.active {
+      background: white;
+      font-weight: bold;
+    }
+
+    .tab-content {
+      display: none;
+      border: 1px solid #ccc;
+      padding: 20px;
+      background: white;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+  </style>
+
+
+
+<style>
+    #canvas-container {
+        background-color: rgb(178, 178, 178);
+    }
+    #canvas {
+        display: block;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: auto;
+    }
+    .container{
+        max-width: 1000px;
+    }
+    .arrow {
+        border: solid black;
+        border-width: 0 4px 4px 0;
+
+        position: absolute;
+        top: 50%;
+
+        width: 20px;
+        height: 20px;
+        -webkit-transform: translate(0, -50%);
+        -ms-transform: translate(0, -50%);
+        transform: translate(0, -50%);
+        cursor: pointer;
+    }
+
+    .right {
+        transform: rotate(-45deg);
+        -webkit-transform: rotate(-45deg);
+        right: -25px;
+    }
+
+    .left {
+        transform: rotate(135deg);
+        -webkit-transform: rotate(135deg);
+        left: -25px;
+    }
+
+    .nav-item img {
+        max-width: 100%;
+         
+        height: auto;
+        display: block;
+    }
+
+    .nav-item p {
+        text-align: center;
+        font-family: 'Mulish', sans-serif;
+        font-weight: 500;
+        line-height: 1.5rem;
+        font-size: 1.2rem;
+        color: black;
+    }
+
+    .interactive-item {
+        align-content: center;
+    }
+
+    .interactive-item video {
+        max-width: 100%;
+        justify-content: center;
+        align-items: center;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .interactive-item p {
+        text-align: center;
+        font-family: 'Mulish', sans-serif;
+        font-weight: 500;
+        line-height: 1.5rem;
+        font-size: 1.2rem;
+        color: black;
+    }
+
+    .interactive-container {
+        margin-bottom: 0rem;
+        display: grid !important;
+        grid-template-columns: 100%;
+        grid-template-rows: 1fr;
+        gap: 0% 1%;
+        justify-content: center;
+    }
+
+    .generated-container {
+      margin-bottom: 1rem;
+      display: grid !important;
+      grid-template-columns: 100%;
+      grid-template-rows: 1fr;
+      gap: 0% 1%;
+      justify-content: center;
+  }
+
+    .teaser-item {
+        justify-content: center;
+        align-items: center;
+        display: flex;
+    }
+
+    .two-column-section {
+      display: flex;
+      width: 100%;
+      border-left: 10px;
+      border-right: 10px;
+    }
+    
+    .two-column-section .column {
+        padding: 0px;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .two-column-section .first-column {
+        width: 37%;
+        padding-left: 2%;
+    }
+    
+    .two-column-section .second-column {
+        width: 63%;
+        padding-right: 2%;
+    }
+
+</style>
+</head>
+<body>
+<div class="wrapper">
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <!--
+  <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <a class="navbar-item" href="#">
+      <span class="icon">
+          <i class="fas fa-home"></i>
+      </span>
+      </a>
+
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          More Research
+        </a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="#">
+            Title 1
+          </a>
+          <a class="navbar-item" href="#">
+            Title 2
+          </a>
+          <a class="navbar-item" href="#">
+            Title 3
+          </a>
+          <a class="navbar-item" href="#">
+            Title 4
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  -->
+  
+</nav>
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">MMHU:
+            A Massive-Scale Multimodal Benchmark for Human Behavior Understanding </h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="" target="_blank">Renjie Li</a><sup>1*</sup>,&nbsp;
+            </span>
+            <span class="author-block">
+              <a href="" target="_blank">Ruijie Ye</a><sup>2*</sup>,&nbsp;
+            </span>
+            <span class="author-block">
+              <a href="" target="_blank">Mingyang Wu</a><sup>1*</sup>,&nbsp;
+            </span>
+            <span class="author-block">
+              <a href="" target="_blank">Hao Frank Yang</a><sup>3</sup>,&nbsp;
+            </span>
+            <span class="author-block">
+              <a href="" target="_blank">Zhiwen Fan</a><sup>4</sup>,&nbsp;
+            </span>
+            <span class="author-block">
+                <a href="" target="_blank">Hezhen Hu</a><sup>4✉</sup>,&nbsp;
+            </span>
+            <span class="author-block">
+              <a href="" target="_blank">Zhengzhong Tu</a><sup>1✉</sup>
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>Texas A&M University</span> &nbsp&nbsp
+            <!-- <br> -->
+            <span class="author-block"><sup>2</sup>Brown University</span> &nbsp&nbsp
+            <span class="author-block"><sup>3</sup>Johns Hopkins University </span> &nbsp&nbsp
+            <span class="author-block"><sup>4</sup>UT Austin</span> 
+          </div>
+
+          <div class="is-size-6 publication-authors">
+            <span class="author-block"><sup>*</sup>equal contribution &nbsp;&nbsp;</span>
+            <span class="author-block"><sup>✉</sup>corresponding author</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <span class="link-block">
+                <a href=""
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href=""
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <!-- Video Link. -->
+              <!-- <span class="link-block">
+                <a href="https://www.youtube.com/watch?v=U5PTnw490SA"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-youtube"></i>
+                  </span>
+                  <span>Video</span>
+                </a>
+              </span> -->
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href=""
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>GitHub</span>
+                  </a>
+              </span>
+              <!-- Colab Link. -->
+              <!-- <span class="link-block">
+                <a href="https://colab.research.google.com/drive/1Dp6VsZp2ozKuu9ccMmsDjyij_vXfCYb3?usp=sharing"
+                   class="external-link button is-normal is-rounded is-dark">
+                   <svg width="30" height="30">       
+                    <image xlink:href="https://upload.wikimedia.org/wikipedia/commons/d/d0/Google_Colaboratory_SVG_Logo.svg" width="30" height="30"/>    
+                   </svg>
+                  <span>&nbsp;&nbsp;Colab</span>
+                  </a>
+              </span> -->
+              <!-- Hugging Face Link. -->
+              <span class="link-block">
+                <a href=""
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span>🤗&nbsp;&nbsp;Hugging Face</span>
+                  </a>
+              </span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <section class="hero teaser">
+    <div class="container is-max-desktop">
+      <div class="hero-body">
+        <img width="100%" src="assets/image/teaser.jpg" alt="Image" style="border-radius: 6pt;">
+      </div>
+      <div class="note-font" style="margin-top: -20pt; font-style: italic;">
+        <p align="center">
+          We propose <b>MMHU</b>, a large-scale dataset for human behavior understanding. We collected 57k human instances with diverse behaviors such as playing with a mobile phone, holding an item, or using mobility devices, from diverse scenes such as in the city, school, park, and alley. We provide rich annotations including motion and trajectory, text descriptions for human motions, and recognize the behaviors that are critical to driving safety. MMHU can facilitate many downstream tasks such as motion prediction, motion generation, or behavior VQA.
+        </p>
+    </div>
+    </div>
+  </section>
+<!-- We propose \bfours, a large-scale dataset for human behavior understanding. 
+    We collected 57k human instances with diverse behaviors such as playing mobile phone, holding object, or using mobility devices, from diverse scenes such as in the city, school, park, and alley. We provide rich annotations including motion and trajectory, text descriptions for human motions, and recognize the behaviors that are critical to driving safety.  -->
+
+
+    
+
+  <section class="section">
+    <!-- <section > -->
+      <div class="container is-max-desktop">
+        <div class="columns is-centered has-text-centered">
+            <div class="column is-four-fifths">
+                <h2 class="title is-3">The MMHU Dataset</h2>
+                <!-- <img src="../static/images/MotionDiffuse/pipeline.png"> -->
+            </div>
+        </div>
+    </div>
+    <div style="border: #999999 1px solid;"></div>
+
+  <div class="hero-body">
+    <div class="note-font" style="margin-top: -20pt; font-style: italic;">
+      <p align="center">
+        The statistics of the MMHU dataset.
+      </p>
+    </div>
+    <img width="100%" src="assets/image/statistics.jpg" alt="Image" style="border-radius: 0pt; ">
+  </div>
+
+  <div class="note-font" style="margin-top: 2pt; font-style: italic;">
+      <p align="center">
+        Some examples of MMHU: each sample contains the motion sequence rendered on the original image, the behavior tags, and the text descriptions.
+      </p>
+  </div>
+      <div class="container">
+        <!-- Start Carousel -->
+        <div id="carousel-demo" class="carousel">
+          <div class="item-1">
+              <video poster="" autoplay controls muted loop playsinline>
+                  <source src="assets/videos/1611_47.mp4"
+                          type="video/mp4">
+              </video>
+              <div class="card-content">
+                  <div class="item__title">
+                    <b>Behavior:</b>Talking, Crossing
+                  </div><div class="item__description">
+                    <b>Description:</b>The pedestrian is walking cross the street while talking to the one near them.
+          </div></div></div>
+          <div class="item-2">
+              <video poster="" autoplay controls muted loop playsinline>
+                <source src="assets/videos/103_472.mp4"
+                        type="video/mp4">
+              </video>
+              <div class="card-content">
+                <div class="item__title">
+                  <b>Behavior:</b>Stroller, Crossing
+                </div><div class="item__description">
+                  <b>Description:</b>The pedestrian continues to walk across the street, pushing the stroller.
+          </div></div></div>
+          <div class="item-3">
+            <video poster="" autoplay controls muted loop playsinline>
+              <source src="assets/videos/47_93.mp4"
+                      type="video/mp4">
+            </video>
+            <div class="card-content">
+              <div class="item__title">
+                <b>Behavior:</b>Bike
+              </div><div class="item__description">
+                <b>Description:</b>The pedestrian rides a bicycle along the sidewalk.
+        </div></div></div>
+        <div class="item-4">
+          <video poster="" autoplay controls muted loop playsinline>
+            <source src="assets/videos/1387_338.mp4"
+                    type="video/mp4">
+          </video>
+          <div class="card-content">
+            <div class="item__title">
+              <b>Behavior:</b>Carrying Items,
+            </div><div class="item__description">
+              <b>Description:</b>The pedestrian walks forward, with a bag in their hand.
+      </div></div></div>
+      <div class="item-5">
+        <video poster="" autoplay controls muted loop playsinline>
+          <source src="assets/videos/1382_1200.mp4"
+                  type="video/mp4">
+        </video>
+        <div class="card-content">
+          <div class="item__title">
+            <b>Behavior:</b>Using Phone,
+          </div><div class="item__description">
+            <b>Description:</b>The pedestrian walks forward, shifting their weight from one foot to the other, and occasionally adjusts their posture as they move.
+    </div></div></div>
+      <div class="item-6">
+        <video poster="" autoplay controls muted loop playsinline>
+          <source src="assets/videos/24_6.mp4"
+                  type="video/mp4">
+        </video>
+        <div class="card-content">
+          <div class="item__title">
+            <b>Behavior:</b>Motorcycle,
+          </div><div class="item__description">
+            <b>Description:</b>The pedestrian rides a scooter, maintaining a steady pace and slight lean forward, with hands positioned on the handlebars.
+    </div></div></div>
+    <div class="item-7">
+      <video poster="" autoplay controls muted loop playsinline>
+        <source src="assets/videos/125_402.mp4"
+                type="video/mp4">
+      </video>
+      <div class="card-content">
+        <div class="item__title">
+          <b>Behavior:</b>Using an Umbrella,
+        </div><div class="item__description">
+          <b>Description:</b>The pedestrian walks steadily, maintaining a consistent pace and posture, with slight adjustments in leg positioning and arm swing.
+  </div></div></div>
+      <div class="item-8">
+        <video poster="" autoplay controls muted loop playsinline>
+          <source src="assets/videos/425_2.mp4"
+                  type="video/mp4">
+        </video>
+        <div class="card-content">
+          <div class="item__title">
+            <b>Behavior:</b>Walking a pet,
+          </div><div class="item__description">
+            <b>Description:</b>The pedestrian walks steadily down the sidewalk, maintaining a consistent pace with slight adjustments in their stance and arm movements.
+    </div></div></div>
+      <div class="item-9">
+        <video poster="" autoplay controls muted loop playsinline>
+          <source src="assets/videos/481_5.mp4"
+                  type="video/mp4">
+        </video>
+        <div class="card-content">
+          <div class="item__title">
+            <b>Behavior:</b>Scooter,
+          </div><div class="item__description">
+            <b>Description:</b>The pedestrian continues riding the scooter, maintaining a steady pace and posture, with minimal changes in their arm and leg movements.
+    </div></div></div>
+      <div class="item-10">
+        <video poster="" autoplay controls muted loop playsinline>
+          <source src="assets/videos/1042_0.mp4"
+                  type="video/mp4">
+        </video>
+        <div class="card-content">
+          <div class="item__title">
+            <b>Behavior:</b>Skateboard,
+          </div><div class="item__description">
+            <b>Description:</b>The pedestrian walks forward, leaning slightly forward and to the left, with their right foot lifted and their left foot positioned beneath it. Their arms swing naturally as they walk, with the right hand moving above the left.
+    </div></div></div></div>
+
+
+        <!-- End Carousel -->
+      </div>
+  </section>
+
+  <section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+            <h2 class="title is-3">Annotation Pipeline</h2>
+            <!-- <img src="../static/images/MotionDiffuse/pipeline.png"> -->
+        </div>
+    </div>
+  </div>
+  <div style="border: #999999 1px solid;"></div>
+  <div class="hero-body">
+    <div class="note-font" style="margin-top: -25pt; font-style: italic; width:70%; margin-left: auto; margin-right: auto; display: block">
+      <p align="center">
+        We collect data from three sources: the Waymo dataset, the YouTube videos, and the self-collected or paid driving videos. 
+        We designed a labeling pipeline to obtain high-quality data annotation with minimal human effort.
+      </p>
+    </div>
+    <img width="100%" src="assets/image/pipe.png" alt="Image" style="margin-top: 3pt; border-radius: 6pt; width:70%; margin-left: auto; margin-right: auto; display: block">
+  </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+          <div class="column is-four-fifths">
+              <h2 class="title is-3">Facilitating Downstream Tasks </h2>
+              <!-- <img src="../static/images/MotionDiffuse/pipeline.png"> -->
+          </div>
+      </div>
+    </div>
+    <div style="border: #999999 1px solid;"></div>
+
+    <div class="note-font" style="margin-top: 0pt; font-style: italic; width:70%; margin-left: auto; margin-right: auto; display: block">
+      <p align="center">
+        The current <b>Motion Generation</b> approaches are not capable of generating human motion in the street context (Left of each example). With fine-tuning on MMHU, they can properly generate such human motions (Right of each example). 
+      </p>
+    </div>
+    <div class="container is-max-desktop" style="margin-top: 3pt">
+  
+      <div class="columns is-centered">
+  
+        <!-- Visual Effects. -->
+        <div class="column">
+          <div class="content">
+            <!-- <h2 class="title is-3">Visual Effects</h2> -->
+            <!-- <p>
+              Using <i>nerfies</i> you can create fun visual effects. This Dolly zoom effect
+              would be impossible without nerfies since it would require going through a wall.
+            </p> -->
+            <!-- <video id="dollyzoom" autoplay controls muted loop playsinline height="100%">
+              <source src="./static/videos/dollyzoom-stacked.mp4"
+                      type="video/mp4">
+            </video> -->
+            <!-- <img width="100%" src="vis/I2/pano.png" alt="Image" style="border-radius: 6pt;"> -->
+            
+            <div class="columns is-centered">
+                <div class="column content">
+                  <img width="100%" src="./assets/videos/Case1-Baseline-Bike-Mesh.gif" alt="Image" style="border-radius: 6pt;">
+                </div>
+                <div class="column content">
+                  <img width="100%" src="./assets/videos/Case1-Finetune-Bike-Mesh.gif" alt="Image" style="border-radius: 6pt;">
+                </div>
+            </div>
+            </div>
+        </div>
+
+        <div class="column">
+            <div class="content">
+              <!-- <h2 class="title is-3">Visual Effects</h2> -->
+              <!-- <p>
+                Using <i>nerfies</i> you can create fun visual effects. This Dolly zoom effect
+                would be impossible without nerfies since it would require going through a wall.
+              </p> -->
+              <!-- <video id="dollyzoom" autoplay controls muted loop playsinline height="100%">
+                <source src="./static/videos/dollyzoom-stacked.mp4"
+                        type="video/mp4">
+              </video> -->
+              <!-- <img width="100%" src="vis/E34/pano.png" alt="Image" style="border-radius: 6pt;"> -->
+              
+              <div class="columns is-centered">
+                <div class="column content">
+                  <img width="100%" src="./assets/videos/Case2-Baseline-Talk-Skeleton.gif" alt="Image" style="border-radius: 6pt;">
+                </div>
+                <div class="column content">
+                  <img width="100%" src="./assets/videos/Case2-Finetune-Talk-Skeleton.gif" alt="Image" style="border-radius: 6pt;">
+                </div>
+            </div>               
+              </div>
+          </div>          
+    </div>
+    </div>
+
+    <div class="note-font" style="margin-top: 10pt; font-style: italic; width:70%; margin-left: auto; margin-right: auto; display: block">
+      <p align="center">
+        Fine-tuning on MMHU also improves the performance of the baseline models on <b>Motion Prediction</b>, <b>Intention Prediction</b>, and <b>Behavior VQA</b>.  
+      </p>
+    </div>
+    <img width="100%" src="assets/image/tables-1.jpg" alt="Image" style="margin-top: 3pt; border-radius: 6pt; width:70%; margin-left: auto; margin-right: auto; display: block">
+
+</div>
+      
+    
+    </section>
+
+    <section class="section">
+
+      <div class="container is-max-desktop">
+        <div class="columns is-centered has-text-centered">
+            <div class="column is-four-fifths">
+                <h2 class="title is-3">BibTex</h2>
+                <!-- <img src="../static/images/MotionDiffuse/pipeline.png"> -->
+            </div>
+        </div>
+    </div>
+    <div style="border: #999999 1px solid;"></div>
+
+  <div class="hero-body">
+    <div class="note-font" style="margin-top: -25pt; font-style: italic;">
+      <p align="center">
+        If you find our project useful, please considering citing the following paper:
+      </p>
+    </div>
+  </div>
+
+
+        <pre><code>
+
+
+        </code></pre>
+      </div>
+    </section>
+
+<!-- </div>
+</section> -->
+
+<!-- </div> -->
+</body>
+</html>
